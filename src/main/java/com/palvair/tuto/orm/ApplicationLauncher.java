@@ -6,17 +6,25 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+
+import javax.annotation.Resource;
 
 /**
  * Created by rpalvair on 07/10/2014.
  */
 @Configuration
 @Log4j
+@PropertySource("classpath:access.properties")
 public class ApplicationLauncher {
+
+    @Resource
+    private Environment environment;
 
     @Bean
     public OrmBean ormBean() {
@@ -27,8 +35,9 @@ public class ApplicationLauncher {
     public javax.sql.DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUsername("root");
-        dataSource.setPassword("");
+        log.info("environment = "+environment);
+        dataSource.setUsername(environment.getProperty("username"));
+        dataSource.setPassword(environment.getProperty("password"));
         dataSource.setUrl("jdbc:mysql://localhost:3306/tutoorm");
         return dataSource;
     }
