@@ -1,12 +1,10 @@
 package com.palvair.tuto.orm;
 
+import com.palvair.tuto.orm.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.ejb.HibernatePersistence;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -21,19 +19,15 @@ import javax.annotation.Resource;
 @Configuration
 @Log4j
 @PropertySource("classpath:access.properties")
+@ComponentScan(basePackages = {"com.palvair.tuto.orm"})
 public class ApplicationLauncher {
 
     @Resource
     private Environment environment;
 
     @Bean
-    public OrmBean ormBean() {
-        return new OrmBean();
-    }
-
-    @Bean
     public javax.sql.DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
         log.info("environment = "+environment);
         dataSource.setUsername(environment.getProperty("username"));
@@ -44,15 +38,13 @@ public class ApplicationLauncher {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        final LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setDataSource(dataSource());
-        //entityManagerFactoryBean.setPersistenceUnitName("");
         entityManagerFactoryBean.setPackagesToScan("com.palvair.tuto.orm.entity");
-        HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQL5Dialect");
         vendorAdapter.setShowSql(true);
         vendorAdapter.setGenerateDdl(true);
-
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistence.class);
         return entityManagerFactoryBean;
@@ -60,15 +52,15 @@ public class ApplicationLauncher {
 
     @Bean
     public JpaTransactionManager transactionManager() throws ClassNotFoundException {
-        JpaTransactionManager transactionManager = new JpaTransactionManager();
-
+        final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
-
         return transactionManager;
     }
 
     public static void main(String[] args) {
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationLauncher.class);
+        final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationLauncher.class);
         log.info("loaded");
+        UserService userService = applicationContext.getBean(UserService.class);
+        userService.log();
     }
 }
