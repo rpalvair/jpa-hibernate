@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 @Log4j
 @PropertySource("classpath:access.properties")
 @ComponentScan(basePackages = {"com.palvair.tuto.orm"})
+@ImportResource("classpath:persistence-context.xml")
 public class ApplicationLauncher {
 
     @Resource
@@ -63,5 +64,7 @@ public class ApplicationLauncher {
         log.info("loaded");
         UserService userService = applicationContext.getBean(UserService.class);
         userService.log();
+        userService.saveRandomUser();
+        userService.findAll();
     }
 }
