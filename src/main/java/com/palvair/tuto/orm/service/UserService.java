@@ -44,4 +44,22 @@ public class UserService implements JpaService {
             log.info("loaded user = " + user);
         }
     }
+
+    public void deleteAll() {
+        simpleRepository.deleteAll();
+    }
+
+    public void saveRandomUser(int count) {
+        for(int i=0;i<count;i++) {
+            final String firstname = RandomStringUtils.randomAlphabetic(5);
+            final String lastname = RandomStringUtils.randomAlphabetic(5);
+            final String age = RandomStringUtils.randomNumeric(2);
+            User user = new User();
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+            user.setAge(age);
+            log.info("user = " + user);
+            simpleRepository.save(user);
+        }
+    }
 }
