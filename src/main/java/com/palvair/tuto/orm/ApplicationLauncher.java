@@ -1,5 +1,6 @@
 package com.palvair.tuto.orm;
 
+import com.palvair.tuto.orm.constants.PropertiesConstants;
 import com.palvair.tuto.orm.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.ejb.HibernatePersistence;
@@ -29,9 +30,9 @@ public class ApplicationLauncher {
     public javax.sql.DataSource dataSource() {
         final DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        log.info("environment = "+environment);
-        dataSource.setUsername(environment.getProperty("username"));
-        dataSource.setPassword(environment.getProperty("password"));
+        log.info("username = " + environment.getProperty(PropertiesConstants.DB_USERNAME.getValue()));
+        dataSource.setUsername(environment.getProperty(PropertiesConstants.DB_USERNAME.getValue()));
+        dataSource.setPassword(environment.getProperty(PropertiesConstants.DB_PASSWORD.getValue()));
         dataSource.setUrl("jdbc:mysql://localhost:3306/tutoorm");
         return dataSource;
     }
