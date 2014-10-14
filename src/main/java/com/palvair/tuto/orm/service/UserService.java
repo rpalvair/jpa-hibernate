@@ -20,7 +20,7 @@ public class UserService implements JpaService {
     private EntityManager em;
 
     @Resource
-    private UserRepository simpleRepository;
+    private UserRepository userRepository;
 
     public void log() {
         log.info("entityManager = " + em.toString());
@@ -35,11 +35,11 @@ public class UserService implements JpaService {
         user.setLastname(lastname);
         user.setAge(age);
         log.info("user = " + user);
-        simpleRepository.save(user);
+        userRepository.save(user);
     }
 
     public void findAll() {
-        final List<User> users = simpleRepository.findAll();
+        final List<User> users = userRepository.findAll();
         for (User user : users) {
             log.info("loaded user = " + user);
         }
