@@ -46,7 +46,7 @@ public class UserService implements JpaService {
     }
 
     public void deleteAll() {
-        simpleRepository.deleteAll();
+        userRepository.deleteAll();
     }
 
     public void saveRandomUser(int count) {
@@ -59,7 +59,7 @@ public class UserService implements JpaService {
             user.setLastname(lastname);
             user.setAge(age);
             log.info("user = " + user);
-            simpleRepository.save(user);
+            userRepository.save(user);
         }
     }
 }
