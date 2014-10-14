@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 @PropertySource("classpath:access.properties")
 @ComponentScan(basePackages = {"com.palvair.tuto.orm"})
 @ImportResource("classpath:persistence-context.xml")
-public class ApplicationLauncher {
+public class ApplicationConfig {
 
     @Resource
     private Environment environment;
@@ -60,7 +60,7 @@ public class ApplicationLauncher {
     }
 
     public static void main(String[] args) {
-        final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationLauncher.class);
+        final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
         log.info("loaded");
         UserService userService = applicationContext.getBean(UserService.class);
         userService.log();
