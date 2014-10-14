@@ -2,6 +2,7 @@ package com.palvair.tuto.orm.service;
 
 import com.palvair.tuto.orm.entity.User;
 import com.palvair.tuto.orm.repository.UserRepository;
+import com.palvair.tuto.orm.specification.UserSpecification;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,13 @@ import java.util.List;
  */
 @Service
 @Log4j
-public class UserCriteriaService implements JpaCriteriaService {
+public class UserCriteriaService<T extends User> implements JpaCriteriaService<T> {
 
     @PersistenceContext
     private EntityManager em;
 
     @Resource
-    private UserRepository userRepository;
+    private UserRepository<User> userRepository;
 
     public List<User> findAll() {
         final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
@@ -36,6 +37,14 @@ public class UserCriteriaService implements JpaCriteriaService {
         final List<User> results = userTypedQuery.getResultList();
         for (User user : results) {
             log.info("user(criteria) = " + user);
+        }
+        return results;
+    }
+
+    public List<User> findByMaxAge(final String maxAge) {
+        List<User> results = userRepository.findAll(UserSpecification.byMaxAge(maxAge));
+        for (User user : results) {
+            log.info("user(specification) = " + user);
         }
         return results;
     }

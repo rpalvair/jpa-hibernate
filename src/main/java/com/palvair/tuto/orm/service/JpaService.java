@@ -1,5 +1,5 @@
 package com.palvair.tuto.orm.service;
 
 
-public interface JpaService {
+public interface JpaService<T> {
 }

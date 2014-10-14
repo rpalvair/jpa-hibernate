@@ -38,4 +38,11 @@ public class ApplicationConfigIT {
         final List<User> results = userCriteriaService.findAll();
         assertNotNull(results);
     }
+
+    @Test
+    public void shouldFindByNameWithCriteriaAndSpecification() {
+        final UserCriteriaService userCriteriaService = applicationContext.getBean(UserCriteriaService.class);
+        final List<User> results = userCriteriaService.findByMaxAge("45");
+        assertNotNull(results);
+    }
 }
