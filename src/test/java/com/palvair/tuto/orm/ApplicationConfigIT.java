@@ -45,4 +45,11 @@ public class ApplicationConfigIT {
         final List<User> results = userCriteriaService.findByMaxAge("45");
         assertNotNull(results);
     }
+
+    @Test
+    public void shouldFindByFirstNameContainsCharacter() {
+        final UserCriteriaService userCriteriaService = applicationContext.getBean(UserCriteriaService.class);
+        final List<User> results = userCriteriaService.findByfirstNameContainsCharacter('a');
+        assertNotNull(results);
+    }
 }

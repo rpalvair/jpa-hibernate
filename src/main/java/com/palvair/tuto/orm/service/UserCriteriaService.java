@@ -48,4 +48,12 @@ public class UserCriteriaService<T extends User> implements JpaCriteriaService<T
         }
         return results;
     }
+
+    public List<User> findByfirstNameContainsCharacter(final char character) {
+        List<User> results = userRepository.findAll(UserSpecification.firstNameContainsCharacter(character));
+        for (User user : results) {
+            log.info("user(containsCharacter) = " + user);
+        }
+        return results;
+    }
 }

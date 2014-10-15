@@ -22,4 +22,13 @@ public class UserSpecification {
             }
         };
     }
+
+    public static Specification<User> firstNameContainsCharacter(final char character) {
+        return new Specification<User>() {
+            @Override
+            public Predicate toPredicate(Root<User> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                return cb.like(root.get(User_.firstname), "%" + character + "%");
+            }
+        };
+    }
 }
