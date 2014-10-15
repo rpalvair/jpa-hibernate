@@ -20,7 +20,7 @@ public class UserService implements JpaService {
     private EntityManager em;
 
     @Resource
-    private UserRepository userRepository;
+    private UserRepository<User> userRepository;
 
     public void log() {
         log.info("entityManager = " + em.toString());
