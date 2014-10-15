@@ -60,10 +60,10 @@ public class UserCriteriaService<T extends User> implements JpaCriteriaService<T
         return results;
     }
 
-    public List<User> findByfirstNameContainsCharacterWithHibernateSession(final char character) {
+    public List<User> findByMaxAgeWithHibernateSession(final String age) {
         Session session = (Session) em.getDelegate();
         Criteria criteria = session.createCriteria(User.class);
-        criteria.add(Restrictions.like("firstname", "%" + character + "%"));
+        criteria.add(Restrictions.lt("age", age));
         @SuppressWarnings("unchecked")
         List<User> userList = criteria.list();
         for (User user : userList) {

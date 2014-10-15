@@ -8,8 +8,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -21,10 +24,17 @@ import static org.junit.Assert.assertTrue;
  * Created by widdy on 09/10/14.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @Transactional
 @Log4j
 public class ApplicationConfigIT {
+
+    @Configuration
+    @Import(ApplicationConfig.class)
+    static class ContextConfiguration {
+
+
+    }
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -62,8 +72,8 @@ public class ApplicationConfigIT {
     }
 
     @Test
-    public void shouldFindByfirstNameContainsCharacterWithHibernateSession() {
-        final List<User> results = userCriteriaService.findByfirstNameContainsCharacterWithHibernateSession('a');
+    public void shouldFindByMaxAgeWithHibernateSession() {
+        final List<User> results = userCriteriaService.findByMaxAgeWithHibernateSession("45");
         log.info("results = " + results);
     }
 
