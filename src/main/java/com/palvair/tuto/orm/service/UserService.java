@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @Log4j
-public class UserService implements JpaService {
+public class UserService<T extends User> implements JpaService<T> {
 
     @PersistenceContext
     private EntityManager em;
@@ -34,15 +34,15 @@ public class UserService implements JpaService {
         user.setFirstname(firstname);
         user.setLastname(lastname);
         user.setAge(age);
-        log.info("user = " + user);
         userRepository.save(user);
     }
 
-    public void findAll() {
+    public List<User> findAll() {
         final List<User> users = userRepository.findAll();
-        for (User user : users) {
+        /*for (User user : users) {
             log.info("loaded user = " + user);
-        }
+        }*/
+        return users;
     }
 
     public void deleteAll() {
@@ -50,7 +50,7 @@ public class UserService implements JpaService {
     }
 
     public void saveRandomUser(int count) {
-        for(int i=0;i<count;i++) {
+        for (int i = 0; i < count; i++) {
             final String firstname = RandomStringUtils.randomAlphabetic(5);
             final String lastname = RandomStringUtils.randomAlphabetic(5);
             final String age = RandomStringUtils.randomNumeric(2);

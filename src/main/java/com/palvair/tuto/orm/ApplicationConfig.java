@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @Log4j
 @PropertySource("classpath:access.properties")
 @ComponentScan(basePackages = {"com.palvair.tuto.orm"})
-@ImportResource("classpath:persistence-context.xml")
+@ImportResource("classpath*:persistence-context.xml")
 public class ApplicationConfig {
 
     @Resource
@@ -61,7 +61,6 @@ public class ApplicationConfig {
 
     public static void main(String[] args) {
         final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(ApplicationConfig.class);
-        log.info("loaded");
         UserService userService = applicationContext.getBean(UserService.class);
         userService.log();
         userService.saveRandomUser();

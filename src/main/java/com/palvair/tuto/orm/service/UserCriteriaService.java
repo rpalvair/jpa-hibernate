@@ -4,6 +4,9 @@ import com.palvair.tuto.orm.entity.User;
 import com.palvair.tuto.orm.repository.UserRepository;
 import com.palvair.tuto.orm.specification.UserSpecification;
 import lombok.extern.log4j.Log4j;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -35,25 +38,37 @@ public class UserCriteriaService<T extends User> implements JpaCriteriaService<T
         userCriteriaQuery.select(users);
         final TypedQuery<User> userTypedQuery = em.createQuery(userCriteriaQuery);
         final List<User> results = userTypedQuery.getResultList();
-        for (User user : results) {
+        /*for (User user : results) {
             log.info("user(criteria) = " + user);
-        }
+        }*/
         return results;
     }
 
     public List<User> findByMaxAge(final String maxAge) {
         List<User> results = userRepository.findAll(UserSpecification.byMaxAge(maxAge));
-        for (User user : results) {
+        /*for (User user : results) {
             log.info("user(specification) = " + user);
-        }
+        }*/
         return results;
     }
 
     public List<User> findByfirstNameContainsCharacter(final char character) {
         List<User> results = userRepository.findAll(UserSpecification.firstNameContainsCharacter(character));
-        for (User user : results) {
+        /*for (User user : results) {
             log.info("user(containsCharacter) = " + user);
-        }
+        }*/
         return results;
+    }
+
+    public List<User> findByfirstNameContainsCharacterWithHibernateSession(final char character) {
+        Session session = (Session) em.getDelegate();
+        Criteria criteria = session.createCriteria(User.class);
+        criteria.add(Restrictions.like("firstname", "%" + character + "%"));
+        @SuppressWarnings("unchecked")
+        List<User> userList = criteria.list();
+        for (User user : userList) {
+            log.info("user(Hibernate-OldTips) = " + user);
+        }
+        return userList;
     }
 }
