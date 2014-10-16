@@ -4,6 +4,8 @@ import com.palvair.tuto.orm.entity.User;
 import com.palvair.tuto.orm.service.UserCriteriaService;
 import com.palvair.tuto.orm.service.UserService;
 import lombok.extern.log4j.Log4j;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ import static org.junit.Assert.assertTrue;
 @Log4j
 public class ApplicationConfigIT {
 
+    private static boolean isInitialized = false;
+    private static boolean isCleaned = false;
+
     @Configuration
     @Import(ApplicationConfig.class)
     static class ContextConfiguration {
@@ -45,10 +50,20 @@ public class ApplicationConfigIT {
     @Autowired
     private UserService<User> userService;
 
-    @Test
-    public void shouldSaveTenUsers() {
+    @Before
+    public void init() {
+        if (isInitialized) return;
+        log.info("INIT DB");
         userService.saveRandomUser(10);
-        userService.findAll();
+        isInitialized = true;
+    }
+
+    @After
+    public void clean() {
+        if (isCleaned) return;
+        log.info("CLEAN DB");
+        userService.deleteAll();
+        isCleaned = true;
     }
 
     @Test
@@ -75,10 +90,5 @@ public class ApplicationConfigIT {
     public void shouldFindByMaxAgeWithHibernateSession() {
         final List<User> results = userCriteriaService.findByMaxAgeWithHibernateSession("45");
         log.info("results = " + results);
-    }
-
-    @Test
-    public void shouldCleanDB() {
-        userService.deleteAll();
     }
 }
