@@ -4,6 +4,7 @@ import com.palvair.tuto.orm.constants.PropertiesConstants;
 import com.palvair.tuto.orm.service.UserService;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.ejb.HibernatePersistence;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
@@ -48,7 +49,7 @@ public class ApplicationConfig {
         vendorAdapter.setShowSql(true);
         vendorAdapter.setGenerateDdl(true);
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
-        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistence.class);
+        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         return entityManagerFactoryBean;
     }
 

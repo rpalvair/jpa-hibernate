@@ -46,7 +46,7 @@ public class UserService<T extends User> implements JpaService<T> {
     }
 
     public void deleteAll() {
-        userRepository.deleteAll();
+        userRepository.deleteAllInBatch();
     }
 
     public void saveRandomUser(int count) {
@@ -58,8 +58,11 @@ public class UserService<T extends User> implements JpaService<T> {
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setAge(age);
-            log.info("user = " + user);
             userRepository.save(user);
         }
+    }
+
+    public void delete(Iterable<? extends User> entities) {
+        userRepository.delete(entities);
     }
 }
