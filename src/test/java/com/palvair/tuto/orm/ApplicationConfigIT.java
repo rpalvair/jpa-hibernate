@@ -1,6 +1,7 @@
 package com.palvair.tuto.orm;
 
 import com.palvair.tuto.orm.entity.User;
+import com.palvair.tuto.orm.service.DefaultUserServiceDelegate;
 import com.palvair.tuto.orm.service.UserCriteriaService;
 import com.palvair.tuto.orm.service.UserService;
 import lombok.extern.log4j.Log4j;
@@ -20,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by widdy on 09/10/14.
@@ -32,7 +32,6 @@ import static org.junit.Assert.assertTrue;
 public class ApplicationConfigIT {
 
     private static boolean isInitialized = false;
-    private static boolean isCleaned = false;
 
     @Configuration
     @Import(ApplicationConfig.class)
@@ -45,6 +44,9 @@ public class ApplicationConfigIT {
     private ApplicationContext applicationContext;
 
     @Autowired
+    private DefaultUserServiceDelegate delegate;
+
+    @Autowired
     private UserCriteriaService<User> userCriteriaService;
 
     @Autowired
@@ -53,43 +55,38 @@ public class ApplicationConfigIT {
     @Before
     public void init() {
         if (isInitialized) return;
-        log.info("INIT DB");
         userService.saveRandomUser(10);
         isInitialized = true;
     }
 
     @After
     public void clean() {
-        if (isCleaned) return;
-        log.info("CLEAN DB");
+        if (!isInitialized) return;
         userService.delete(userService.findAll());
-        isCleaned = true;
+        isInitialized = false;
     }
 
     @Test
     public void shouldFindAllWithCriteria() {
         final List<User> results = userCriteriaService.findAll();
         assertNotNull(results);
-        assertTrue(results.size() > 0);
     }
 
     @Test
     public void shouldFindByNameWithCriteriaAndSpecification() {
         final List<User> results = userCriteriaService.findByMaxAge("45");
-        log.info("results = " + results);
-        //assertNotNull(results);
-        //assertTrue(results.size() > 0);
+        assertNotNull(results);
     }
 
     @Test
     public void shouldFindByFirstNameContainsCharacter() {
         final List<User> results = userCriteriaService.findByfirstNameContainsCharacter('a');
-        log.info("results = " + results);
+        assertNotNull(results);
     }
 
     @Test
     public void shouldFindByMaxAgeWithHibernateSession() {
         final List<User> results = userCriteriaService.findByMaxAgeWithHibernateSession("45");
-        log.info("results = " + results);
+        assertNotNull(results);
     }
 }
