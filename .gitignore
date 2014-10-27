@@ -2,4 +2,5 @@
 *.iml
 target/**
 /.project
-/src/test/resources/access.properties
+**/access.properties
+*.log

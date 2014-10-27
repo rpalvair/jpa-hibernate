@@ -25,4 +25,17 @@ public class User {
 
     @Setter
     private String age;
+
+    public User(String firstname, String lastname) {
+        this.firstname = firstname;
+        this.lastname = lastname;
+    }
+
+    public User() {
+
+    }
+
+    public User(String firstname) {
+        this.firstname = firstname;
+    }
 }

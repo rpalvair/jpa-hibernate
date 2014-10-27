@@ -89,4 +89,18 @@ public class ApplicationConfigIT {
         final List<User> results = userCriteriaService.findByMaxAgeWithHibernateSession("45");
         assertNotNull(results);
     }
+
+    @Test
+    public void shouldFindAllFirstName() {
+        final List<?> results = userCriteriaService.findAllWithFirstName();
+        log.info("results = " + results);
+        assertNotNull(results);
+    }
+
+    @Test
+    public void shouldFindAllWithFirstNameAndLastName() {
+        final List<?> results = userCriteriaService.findAllWithFirstNameAndLastName();
+        log.info("results = " + results);
+        assertNotNull(results);
+    }
 }

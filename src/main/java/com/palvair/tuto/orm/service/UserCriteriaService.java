@@ -83,4 +83,23 @@ public class UserCriteriaService<T extends User> implements JpaCriteriaService<T
         return count;
     }
 
+    public List<User> findAllWithFirstName() {
+        final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> from = userCriteriaQuery.from(User.class);
+        userCriteriaQuery = userCriteriaQuery.multiselect(from.get("firstname"));
+        final TypedQuery<User> userTypedQuery = em.createQuery(userCriteriaQuery);
+        final List<User> results = userTypedQuery.getResultList();
+        return results;
+    }
+
+    public List<User> findAllWithFirstNameAndLastName() {
+        final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> from = userCriteriaQuery.from(User.class);
+        userCriteriaQuery = userCriteriaQuery.multiselect(from.get("firstname"), from.get("lastname"));
+        final TypedQuery<User> userTypedQuery = em.createQuery(userCriteriaQuery);
+        final List<User> results = userTypedQuery.getResultList();
+        return results;
+    }
 }
