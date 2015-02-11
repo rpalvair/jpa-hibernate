@@ -85,20 +85,30 @@ public class UserCriteriaService<T extends User> implements JpaCriteriaService<T
 
     public List<User> findAllWithFirstName() {
         final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> from = userCriteriaQuery.from(User.class);
-        userCriteriaQuery = userCriteriaQuery.multiselect(from.get("firstname"));
-        final TypedQuery<User> userTypedQuery = em.createQuery(userCriteriaQuery);
+        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> from = criteriaQuery.from(User.class);
+        criteriaQuery.multiselect(from.get("firstname"));
+        final TypedQuery<User> userTypedQuery = em.createQuery(criteriaQuery);
         final List<User> results = userTypedQuery.getResultList();
         return results;
     }
 
     public List<User> findAllWithFirstNameAndLastName() {
         final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        CriteriaQuery<User> userCriteriaQuery = criteriaBuilder.createQuery(User.class);
-        final Root<User> from = userCriteriaQuery.from(User.class);
-        userCriteriaQuery = userCriteriaQuery.multiselect(from.get("firstname"), from.get("lastname"));
-        final TypedQuery<User> userTypedQuery = em.createQuery(userCriteriaQuery);
+        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> from = criteriaQuery.from(User.class);
+        criteriaQuery.multiselect(from.get("firstname"), from.get("lastname"));
+        final TypedQuery<User> userTypedQuery = em.createQuery(criteriaQuery);
+        final List<User> results = userTypedQuery.getResultList();
+        return results;
+    }
+
+    public List<User> findAllByNameIn(String... names) {
+        final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        final CriteriaQuery<User> criteriaQuery = criteriaBuilder.createQuery(User.class);
+        final Root<User> from = criteriaQuery.from(User.class);
+        criteriaQuery.where(from.get("firstname").in(names));
+        final TypedQuery<User> userTypedQuery = em.createQuery(criteriaQuery);
         final List<User> results = userTypedQuery.getResultList();
         return results;
     }

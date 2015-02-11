@@ -1,6 +1,7 @@
 package com.palvair.tuto.orm;
 
 import com.palvair.tuto.orm.entity.User;
+import com.palvair.tuto.orm.repository.UserRepository;
 import com.palvair.tuto.orm.service.DefaultUserServiceDelegate;
 import com.palvair.tuto.orm.service.UserCriteriaService;
 import com.palvair.tuto.orm.service.UserService;
@@ -52,6 +53,9 @@ public class ApplicationConfigIT {
     @Autowired
     private UserService<User> userService;
 
+    @Autowired(required = true)
+    private UserRepository<User> userRepository;
+
     @Before
     public void init() {
         if (isInitialized) return;
@@ -93,14 +97,21 @@ public class ApplicationConfigIT {
     @Test
     public void shouldFindAllFirstName() {
         final List<?> results = userCriteriaService.findAllWithFirstName();
-        log.info("results = " + results);
         assertNotNull(results);
     }
 
     @Test
     public void shouldFindAllWithFirstNameAndLastName() {
         final List<?> results = userCriteriaService.findAllWithFirstNameAndLastName();
-        log.info("results = " + results);
+        assertNotNull(results);
+    }
+
+    @Test
+    public void shouldSaveAnUserAndRetrieveItByNameIn() {
+        final User user = new User("billy");
+        final User savedUser = userRepository.saveAndFlush(user);
+        assertNotNull(savedUser);
+        final List<User> results = userCriteriaService.findAllByNameIn("billy", "crawford");
         assertNotNull(results);
     }
 }
