@@ -3,6 +3,7 @@ package com.palvair.tuto.orm.service;
 
 import com.palvair.tuto.orm.entity.User;
 import com.palvair.tuto.orm.repository.UserRepository;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class UserService<T extends User> implements JpaService<T> {
     private EntityManager em;
 
     @Resource
+    @Getter
     private UserRepository<User> userRepository;
 
     @Autowired
@@ -44,5 +46,9 @@ public class UserService<T extends User> implements JpaService<T> {
 
     public void delete(Iterable<? extends User> entities) {
         delegate.delete(entities);
+    }
+
+    public void saveUser(final User user) {
+        userRepository.save(user);
     }
 }

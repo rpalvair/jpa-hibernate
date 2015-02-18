@@ -1,11 +1,10 @@
 package com.palvair.tuto.orm.entity;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author rpalvair
@@ -18,4 +17,9 @@ public class Contact {
     @Id
     @GeneratedValue
     private Long ID;
+
+    @Column
+    @Getter
+    @Setter
+    private String name;
 }
