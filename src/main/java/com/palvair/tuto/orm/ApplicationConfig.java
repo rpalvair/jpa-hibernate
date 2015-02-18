@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -30,13 +32,9 @@ public class ApplicationConfig {
 
     @Bean
     public javax.sql.DataSource dataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        log.info("username = " + environment.getProperty(PropertiesConstants.DB_USERNAME.getValue()));
-        dataSource.setUsername(environment.getProperty(PropertiesConstants.DB_USERNAME.getValue()));
-        dataSource.setPassword(environment.getProperty(PropertiesConstants.DB_PASSWORD.getValue()));
-        dataSource.setUrl("jdbc:mysql://localhost:3306/tutoorm");
-        return dataSource;
+        return new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.H2)
+                .build();
     }
 
     @Bean
@@ -45,7 +43,7 @@ public class ApplicationConfig {
         entityManagerFactoryBean.setDataSource(dataSource());
         entityManagerFactoryBean.setPackagesToScan("com.palvair.tuto.orm.entity");
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.MySQL5Dialect");
+        vendorAdapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
         vendorAdapter.setShowSql(true);
         vendorAdapter.setGenerateDdl(true);
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
