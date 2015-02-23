@@ -1,6 +1,8 @@
 package com.palvair.tuto.orm.service;
 
+import com.palvair.tuto.orm.entity.Meeting;
 import com.palvair.tuto.orm.entity.User;
+import com.palvair.tuto.orm.repository.MeetingRepository;
 import com.palvair.tuto.orm.repository.UserRepository;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +13,11 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class DefaultUserServiceDelegate implements UserServiceDelegate {
-    @Autowired
+    @Autowired(required = true)
     private UserRepository<User> userRepository;
+
+    @Autowired(required = true)
+    private MeetingRepository meetingRepository;
 
     @Override
     public void saveRandomUser(int count) {
@@ -24,6 +29,10 @@ public class DefaultUserServiceDelegate implements UserServiceDelegate {
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setAge(age);
+            final Meeting meeting = new Meeting();
+            //avoid transient exception
+            meetingRepository.save(meeting);
+            user.setMeeting(meeting);
             userRepository.save(user);
         }
     }
@@ -42,6 +51,9 @@ public class DefaultUserServiceDelegate implements UserServiceDelegate {
         user.setFirstname(firstname);
         user.setLastname(lastname);
         user.setAge(age);
+        final Meeting meeting = new Meeting();
+        //avoid transient exception
+        meetingRepository.save(meeting);
         userRepository.save(user);
     }
 }

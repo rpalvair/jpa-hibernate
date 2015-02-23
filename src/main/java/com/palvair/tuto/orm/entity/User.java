@@ -1,6 +1,7 @@
 package com.palvair.tuto.orm.entity;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -15,6 +16,12 @@ public class User {
     @GeneratedValue
     private Long ID;
 
+    @Column(name = "VERSION")
+    @Version
+    @Getter
+    @Setter
+    private Integer version;
+
     @Setter
     private String firstname;
 
@@ -26,6 +33,11 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Contact> contact;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    //optional
+    //@JoinColumn(name="MEETING_ID")
+    private Meeting meeting;
 
     public User(String firstname, String lastname) {
         this.firstname = firstname;

@@ -2,7 +2,10 @@ package com.palvair.tuto.orm.service;
 
 import com.palvair.tuto.orm.ApplicationConfig;
 import com.palvair.tuto.orm.entity.Contact;
+import com.palvair.tuto.orm.entity.Meeting;
 import com.palvair.tuto.orm.entity.User;
+import com.palvair.tuto.orm.repository.ContactRepository;
+import com.palvair.tuto.orm.repository.MeetingRepository;
 import lombok.extern.log4j.Log4j;
 import org.junit.After;
 import org.junit.Assert;
@@ -17,8 +20,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author rpalvair
@@ -38,6 +45,15 @@ public class UserServiceIT {
     @Autowired(required = true)
     private UserService<User> userService;
 
+    @Autowired(required = true)
+    private MeetingRepository meetingRepository;
+
+    @Autowired(required = true)
+    private ContactRepository contactRepository;
+
+    @PersistenceContext
+    private EntityManager em;
+
     private static boolean isInitialized = false;
 
     @Before
@@ -52,6 +68,11 @@ public class UserServiceIT {
         user.setContact(new ArrayList<Contact>() {{
             add(contact);
         }});
+        final Meeting meeting = new Meeting();
+        meeting.setName("test");
+        //avoid transient exception
+        meetingRepository.save(meeting);
+        user.setMeeting(meeting);
         userService.saveUser(user);
         isInitialized = true;
     }
@@ -65,14 +86,19 @@ public class UserServiceIT {
 
 
     @Test
-    public void testOnLazyRelations() {
+    public void testOnLazyRelationsByDetaching() {
         final User user = userService.findAll().get(0);
-        Assert.assertNotNull(user);
-        final List<Contact> contactList = user.getContact();
-        Assert.assertNotNull(contactList);
-        final Contact contact = contactList.get(0);
-        Assert.assertNotNull(contact);
-        final String name = contact.getName();
-        log.info("contact Name = " + name);
+        assertNotNull(user);
+        //detach object
+        em.detach(user);
+        final String oldFirstName = user.getFirstname();
+        log.info("oldFirstName = " + oldFirstName);
+        user.setFirstname("Johnny");
+        //lazy should occurred here
+        final List<Contact> contacts = user.getContact();
+        log.info("contacts size = " + contacts.size());
+        final Contact contact = contacts.get(0);
+        log.info("contact name = " + contact.getName());
+        Assert.assertEquals(oldFirstName, userService.getUserRepository().findOne(user.getID()).getFirstname());
     }
 }
