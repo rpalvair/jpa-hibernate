@@ -92,4 +92,27 @@ public class UserCriteriaServiceIT {
         assertEquals(10L, results);
     }
 
+    @Test
+    public void shouldFindAllIds() {
+        final List<Long> list = userCriteriaService.findAllIds();
+        assertNotNull(list);
+    }
+
+    @Test
+    public void shouldFindAllIdsWithHibernateSession() {
+        final List<Long> list = userCriteriaService.findAllIdsWithHibernateSession();
+        assertNotNull(list);
+    }
+
+    @Test
+    public void shouldFindByMaxAgeWithHibernateSessionAndDetachedCriteria() {
+        final List<User> list = userCriteriaService.findByMaxAgeWithHibernateSessionAndDetachedCriteria("45");
+        assertNotNull(list);
+    }
+
+    @Test
+    public void shouldFindAllIdsWithMaxAge() {
+        final List<Long> list = userCriteriaService.findAllIdsWithMaxAge("45");
+        assertNotNull(list);
+    }
 }

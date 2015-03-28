@@ -1,10 +1,13 @@
 package com.palvair.tuto.orm.service;
 
+import com.palvair.tuto.orm.entity.Contact;
 import com.palvair.tuto.orm.entity.User;
 import com.palvair.tuto.orm.repository.UserRepository;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 /**
  * Created by rpalvair on 20/10/2014.
@@ -24,6 +27,11 @@ public class DefaultUserServiceDelegate implements UserServiceDelegate {
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setAge(age);
+            final Contact contact = new Contact();
+            contact.setName("your friend");
+            user.setContact(new ArrayList<Contact>() {{
+                add(contact);
+            }});
             userRepository.save(user);
         }
     }

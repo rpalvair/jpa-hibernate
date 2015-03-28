@@ -1,6 +1,7 @@
 package com.palvair.tuto.orm.entity;
 
 import javax.annotation.Generated;
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -9,6 +10,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class User_ {
 
 	public static volatile SingularAttribute<User, String> firstname;
+	public static volatile ListAttribute<User, Contact> contact;
 	public static volatile SingularAttribute<User, Long> ID;
 	public static volatile SingularAttribute<User, String> age;
 	public static volatile SingularAttribute<User, String> lastname;

@@ -5,6 +5,7 @@ import com.palvair.tuto.orm.repository.UserRepository;
 import com.palvair.tuto.orm.service.DefaultUserServiceDelegate;
 import com.palvair.tuto.orm.service.UserCriteriaService;
 import com.palvair.tuto.orm.service.UserService;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.extern.log4j.Log4j;
 import org.junit.After;
 import org.junit.Before;
@@ -76,42 +77,4 @@ public class ApplicationConfigIT {
         assertNotNull(results);
     }
 
-    @Test
-    public void shouldFindByNameWithCriteriaAndSpecification() {
-        final List<User> results = userCriteriaService.findByMaxAge("45");
-        assertNotNull(results);
-    }
-
-    @Test
-    public void shouldFindByFirstNameContainsCharacter() {
-        final List<User> results = userCriteriaService.findByfirstNameContainsCharacter('a');
-        assertNotNull(results);
-    }
-
-    @Test
-    public void shouldFindByMaxAgeWithHibernateSession() {
-        final List<User> results = userCriteriaService.findByMaxAgeWithHibernateSession("45");
-        assertNotNull(results);
-    }
-
-    @Test
-    public void shouldFindAllFirstName() {
-        final List<?> results = userCriteriaService.findAllWithFirstName();
-        assertNotNull(results);
-    }
-
-    @Test
-    public void shouldFindAllWithFirstNameAndLastName() {
-        final List<?> results = userCriteriaService.findAllWithFirstNameAndLastName();
-        assertNotNull(results);
-    }
-
-    @Test
-    public void shouldSaveAnUserAndRetrieveItByNameIn() {
-        final User user = new User("billy");
-        final User savedUser = userRepository.saveAndFlush(user);
-        assertNotNull(savedUser);
-        final List<User> results = userCriteriaService.findAllByNameIn("billy", "crawford");
-        assertNotNull(results);
-    }
 }
