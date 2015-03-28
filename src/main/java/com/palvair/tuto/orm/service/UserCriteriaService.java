@@ -130,16 +130,16 @@ public class UserCriteriaService<T extends User> implements JpaCriteriaService<T
         return results;
     }
 
-    public List<Long> findAllIdsWithMaxAge(final String max) {
+    public List<Long> findAllIdsWithMax(final Long max) {
         final CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
         final CriteriaQuery<Long> criteriaQuery = criteriaBuilder.createQuery(Long.class);
         final Root<User> from = criteriaQuery.from(User.class);
         criteriaQuery.select(from.get(User_.ID));
-        ParameterExpression<String> p = criteriaBuilder.parameter(String.class, "age");
-        criteriaQuery.where(criteriaBuilder.equal(from.get("age"), p));
+        ParameterExpression<Long> p = criteriaBuilder.parameter(Long.class, "ID");
+        criteriaQuery.where(criteriaBuilder.greaterThan(from.get(User_.ID), p));
         //criteriaQuery.where(criteriaBuilder.gt(from.get(User_.ID),5));
         final TypedQuery<Long> userTypedQuery = em.createQuery(criteriaQuery);
-        userTypedQuery.setParameter("age", max);
+        userTypedQuery.setParameter("ID", max);
         final List<Long> results = userTypedQuery.getResultList();
         return results;
     }

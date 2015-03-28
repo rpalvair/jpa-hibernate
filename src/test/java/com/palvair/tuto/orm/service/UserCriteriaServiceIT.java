@@ -112,7 +112,7 @@ public class UserCriteriaServiceIT {
 
     @Test
     public void shouldFindAllIdsWithMaxAge() {
-        final List<Long> list = userCriteriaService.findAllIdsWithMaxAge("45");
+        final List<Long> list = userCriteriaService.findAllIdsWithMax(45L);
         assertNotNull(list);
     }
 }
