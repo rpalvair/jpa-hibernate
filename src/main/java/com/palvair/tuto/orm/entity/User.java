@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Data
-@BatchSize(size = 10)
 public class User {
 
     @Id
