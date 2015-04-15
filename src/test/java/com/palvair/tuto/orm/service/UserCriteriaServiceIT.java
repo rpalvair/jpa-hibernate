@@ -5,6 +5,7 @@ import com.palvair.tuto.orm.entity.User;
 import lombok.extern.log4j.Log4j;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @Transactional
 @Log4j
+@Ignore
 public class UserCriteriaServiceIT {
 
     private static boolean isInitialized = false;

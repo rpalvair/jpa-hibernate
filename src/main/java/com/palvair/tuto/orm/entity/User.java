@@ -3,8 +3,12 @@ package com.palvair.tuto.orm.entity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
@@ -36,7 +40,7 @@ public class User {
 
     @ManyToOne(fetch = FetchType.LAZY)
     //optional
-    //@JoinColumn(name="MEETING_ID")
+    @JoinColumn(name="MEETING_ID")
     private Meeting meeting;
 
     public User(String firstname, String lastname) {

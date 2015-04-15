@@ -31,7 +31,7 @@ public class Meeting {
     private String name;
 
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "meeting",cascade = javax.persistence.CascadeType.PERSIST)
     private List<User> users;
 
 }

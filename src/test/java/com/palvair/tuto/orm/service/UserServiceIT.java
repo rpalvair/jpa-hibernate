@@ -7,10 +7,7 @@ import com.palvair.tuto.orm.entity.User;
 import com.palvair.tuto.orm.repository.ContactRepository;
 import com.palvair.tuto.orm.repository.MeetingRepository;
 import lombok.extern.log4j.Log4j;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +31,7 @@ import static org.junit.Assert.assertNotNull;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @Transactional
 @Log4j
+@Ignore
 public class UserServiceIT {
 
     @Configuration
@@ -92,13 +90,10 @@ public class UserServiceIT {
         //detach object
         em.detach(user);
         final String oldFirstName = user.getFirstname();
-        log.info("oldFirstName = " + oldFirstName);
         user.setFirstname("Johnny");
         //lazy should occurred here
         final List<Contact> contacts = user.getContact();
-        log.info("contacts size = " + contacts.size());
         final Contact contact = contacts.get(0);
-        log.info("contact name = " + contact.getName());
         Assert.assertEquals(oldFirstName, userService.getUserRepository().findOne(user.getID()).getFirstname());
     }
 }
