@@ -9,6 +9,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(Meeting.class)
 public abstract class Meeting_ {
 
+	public static volatile SingularAttribute<Meeting, Conference> conference;
 	public static volatile SingularAttribute<Meeting, String> name;
 	public static volatile SingularAttribute<Meeting, Long> ID;
 	public static volatile SingularAttribute<Meeting, Integer> version;

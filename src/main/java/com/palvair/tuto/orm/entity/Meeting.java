@@ -34,4 +34,6 @@ public class Meeting {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "meeting",cascade = javax.persistence.CascadeType.PERSIST)
     private List<User> users;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Conference conference;
 }
