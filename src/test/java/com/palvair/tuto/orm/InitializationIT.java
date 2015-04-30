@@ -3,7 +3,6 @@ package com.palvair.tuto.orm;
 import com.palvair.tuto.orm.entity.Conference;
 import com.palvair.tuto.orm.entity.Meeting;
 import com.palvair.tuto.orm.entity.User;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.Hibernate;
 import org.junit.Before;
@@ -13,14 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
@@ -34,7 +31,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class)
 @Transactional
 @Log4j
-public class FetchingIT {
+public class InitializationIT {
 
     @Configuration
     @Import(ApplicationConfig.class)
@@ -58,7 +55,7 @@ public class FetchingIT {
 
     @Before
     public void init() {
-        if(!isinit) {
+        if (!isinit) {
             final User user = new User();
             final Meeting meeting = new Meeting();
             meeting.setName("meeting");
