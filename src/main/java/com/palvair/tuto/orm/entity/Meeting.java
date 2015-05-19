@@ -15,6 +15,10 @@ import java.util.List;
 @Data
 public class Meeting {
 
+    public Meeting() {
+
+    }
+
     @Id
     @GeneratedValue
     private Long ID;
