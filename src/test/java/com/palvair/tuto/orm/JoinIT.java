@@ -2,6 +2,7 @@ package com.palvair.tuto.orm;
 
 import com.palvair.tuto.orm.entity.Conference;
 import com.palvair.tuto.orm.entity.Meeting;
+import com.palvair.tuto.orm.entity.Meeting_;
 import com.palvair.tuto.orm.entity.User;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.criterion.CriteriaQuery;
@@ -29,9 +30,7 @@ import javax.persistence.criteria.Root;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * @author rpalvair
@@ -63,6 +62,7 @@ public class JoinIT {
     public void init() {
         if (!isinit) {
             final User user = new User();
+            user.setFirstname("arthur");
             final Meeting meeting = new Meeting();
             meeting.setName("meeting");
             user.setMeeting(meeting);
@@ -99,6 +99,7 @@ public class JoinIT {
         TypedQuery<Meeting> typedQuery = em.createQuery(criteria);
         final List<Meeting> meetings = typedQuery.getResultList();
         assertNotNull(meetings);
+        assertTrue(meetings.size() > 0);
         log.info("method terminated = "+name.getMethodName());
     }
 
@@ -120,6 +121,26 @@ public class JoinIT {
         final List<Meeting> meetings = typedQuery.getResultList();
         assertNotNull(meetings);
         assertTrue(meetings.size() == 0);
+        log.info("method terminated = "+name.getMethodName());
+    }
+
+    @Test
+    public void innerJoinWithWhereClauseMeetingOnUser() {
+
+        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaQuery criteria = criteriaBuilder.createQuery();
+
+        Root<User> user = criteria.from(User.class);
+
+
+        /** where **/
+        criteria.select(user).where(criteriaBuilder.equal(user.get("meeting").get("name"), "meeting"));
+
+        TypedQuery<User> typedQuery = em.createQuery(criteria);
+        final List<User> users = typedQuery.getResultList();
+        assertNotNull(users);
+        assertTrue(users.size() > 0);
+        assertEquals(users.get(0).getFirstname(), "arthur");
         log.info("method terminated = "+name.getMethodName());
     }
 }
