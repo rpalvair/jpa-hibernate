@@ -11,7 +11,7 @@ import java.util.List;
  * @author rpalvair
  */
 @Entity
-@Table(name = "meeting")
+@Table(name = "Meeting")
 @Data
 public class Meeting {
 
@@ -21,6 +21,7 @@ public class Meeting {
 
     @Id
     @GeneratedValue
+    @Getter
     private Long ID;
 
     @Column(name = "VERSION")

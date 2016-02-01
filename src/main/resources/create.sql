@@ -1,0 +1,26 @@
+CREATE TABLE Conference (
+    ID INTEGER PRIMARY KEY
+);
+
+CREATE TABLE Contact (
+    ID INTEGER PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE Meeting (
+    ID INTEGER PRIMARY KEY,
+    version INTEGER,
+    name VARCHAR(50),
+    CONFERENCE_ID VARCHAR,
+    FOREIGN KEY (CONFERENCE_ID) REFERENCES Conference(ID)
+);
+
+CREATE TABLE User (
+    ID INTEGER PRIMARY KEY,
+    version INTEGER,
+    firstname VARCHAR(50),
+    lastname VARCHAR(50),
+    age VARCHAR(50),
+    MEETING_ID VARCHAR,
+    FOREIGN KEY (MEETING_ID) REFERENCES Meeting(ID)
+);

@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table(name = "user")
+@Table(name = "User")
 @Data
 public class User {
 
@@ -35,8 +35,8 @@ public class User {
     @Setter
     private String age;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    private List<Contact> contact;
+    //@OneToMany(fetch = FetchType.LAZY)
+    //private List<Contact> contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
     //optional

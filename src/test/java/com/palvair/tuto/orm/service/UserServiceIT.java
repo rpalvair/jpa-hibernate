@@ -28,17 +28,11 @@ import static org.junit.Assert.assertNotNull;
  * @author rpalvair
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 @Log4j
 @Ignore
 public class UserServiceIT {
-
-    @Configuration
-    @Import(ApplicationConfig.class)
-    static class ContextConfiguration {
-
-    }
 
     @Autowired(required = true)
     private UserService<User> userService;
@@ -52,36 +46,6 @@ public class UserServiceIT {
     @PersistenceContext
     private EntityManager em;
 
-    private static boolean isInitialized = false;
-
-    @Before
-    public void init() {
-        if (isInitialized) return;
-        final User user = new User();
-        user.setFirstname("Billy");
-        user.setLastname("Crawford");
-        user.setAge("30");
-        final Contact contact = new Contact();
-        contact.setName("your friend");
-        user.setContact(new ArrayList<Contact>() {{
-            add(contact);
-        }});
-        final Meeting meeting = new Meeting();
-        meeting.setName("test");
-        //avoid transient exception
-        meetingRepository.save(meeting);
-        user.setMeeting(meeting);
-        userService.saveUser(user);
-        isInitialized = true;
-    }
-
-    @After
-    public void clean() {
-        if (!isInitialized) return;
-        userService.delete(userService.findAll());
-        isInitialized = false;
-    }
-
 
     @Test
     public void testOnLazyRelationsByDetaching() {
@@ -92,8 +56,8 @@ public class UserServiceIT {
         final String oldFirstName = user.getFirstname();
         user.setFirstname("Johnny");
         //lazy should occurred here
-        final List<Contact> contacts = user.getContact();
+        /*final List<Contact> contacts = user.getContact();
         final Contact contact = contacts.get(0);
-        Assert.assertEquals(oldFirstName, userService.getUserRepository().findOne(user.getID()).getFirstname());
+        Assert.assertEquals(oldFirstName, userService.getUserRepository().findOne(user.getID()).getFirstname());*/
     }
 }

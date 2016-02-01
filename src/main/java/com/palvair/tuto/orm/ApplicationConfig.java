@@ -34,6 +34,8 @@ public class ApplicationConfig {
     public javax.sql.DataSource dataSource() {
         return new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
+                .addScript("classpath:/create.sql")
+                .addScript("classpath:/insert.sql")
                 .build();
     }
 
@@ -45,7 +47,7 @@ public class ApplicationConfig {
         final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setDatabasePlatform("org.hibernate.dialect.H2Dialect");
         vendorAdapter.setShowSql(true);
-        vendorAdapter.setGenerateDdl(true);
+        //vendorAdapter.setGenerateDdl(true);
         entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);
         entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         return entityManagerFactoryBean;

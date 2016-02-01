@@ -28,58 +28,19 @@ import static org.junit.Assert.*;
  * @author rpalvair
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 @Log4j
 public class InitializationIT {
 
-    @Configuration
-    @Import(ApplicationConfig.class)
-    static class ContextConfiguration {
-
-    }
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
     @PersistenceContext
     private EntityManager em;
 
-    private Long meetingId;
+    private Long meetingId = 1L;
 
-    private Long userId;
+    private Long userId = 1L;
 
-    private Long conferenceId;
-
-    boolean isinit = false;
-
-    @Before
-    public void init() {
-        if (!isinit) {
-            final User user = new User();
-            final Meeting meeting = new Meeting();
-            meeting.setName("meeting");
-            user.setMeeting(meeting);
-            meeting.setUsers(Arrays.asList(user));
-
-            final Conference conference = new Conference();
-            conference.setMeetings(Arrays.asList(meeting));
-
-            meeting.setConference(conference);
-
-            em.persist(conference);
-            //em.persist(meeting);
-
-            meetingId = meeting.getID();
-            userId = user.getID();
-            conferenceId = conference.getID();
-            em.flush();
-            //to have proxies!!
-            em.clear();
-            isinit = true;
-        }
-
-    }
+    private Long conferenceId = 1L;
 
     @Test
     public void getUsersByMeeting() {
@@ -87,15 +48,17 @@ public class InitializationIT {
         assertNotNull(meetingId);
         assertNotNull(userId);
         final Meeting meeting = em.getReference(Meeting.class, meetingId);
-        //not initialized
+        /** entity is not initialized because we call getReference() **/
         assertFalse(Hibernate.isInitialized(meeting));
+        /** but the object is not null however **/
         assertNotNull(meeting);
         List<User> users = meeting.getUsers();
+        /** once you call a method on the object the object is initialized **/
         assertFalse(Hibernate.isInitialized(users));
         assertNotNull(users);
         for (User user : users) {
             final Meeting userMeeting = user.getMeeting();
-            //initialized by Hibernate
+            /** entity is initialized because we use a loop **/
             assertTrue(Hibernate.isInitialized(userMeeting));
             assertNotNull(userMeeting);
             assertNotNull(userMeeting.getName());
@@ -107,7 +70,8 @@ public class InitializationIT {
         assertTrue(em.isOpen());
         assertNotNull(conferenceId);
         final Conference conference = em.find(Conference.class, conferenceId);
-        //initialized thanks to the find
+        /** here the entity is initialized because we call find()
+         Hibernate first search the entity in the persistence context before hitting the database **/
         assertTrue(Hibernate.isInitialized(conference));
         List<Meeting> meetings = conference.getMeetings();
         assertFalse(Hibernate.isInitialized(meetings));
@@ -118,11 +82,13 @@ public class InitializationIT {
     public void proxyExample() {
         assertTrue(em.isOpen());
         final Meeting meeting = em.getReference(Meeting.class, meetingId);
-        //not initialized
+        /** entity is not initialized **/
         assertFalse(Hibernate.isInitialized(meeting));
-        //it's a proxy!!
+        /** entity is a proxy **/
         assertNotEquals(meeting.getClass(), Meeting.class);
+        log.debug("proxy class = "+meeting.getClass());
         final Conference conference = meeting.getConference();
+        /** entity is initialized because of the call to the accessor **/
         assertFalse(Hibernate.isInitialized(conference));
     }
 

@@ -26,19 +26,11 @@ import static org.junit.Assert.assertNotNull;
  * Created by rpalvair on 20/10/2014.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 @Log4j
 @Ignore
 public class UserCriteriaServiceIT {
-
-    private static boolean isInitialized = false;
-
-    @Configuration
-    @Import(ApplicationConfig.class)
-    static class ContextConfiguration {
-
-    }
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -49,19 +41,6 @@ public class UserCriteriaServiceIT {
     @Autowired
     private UserCriteriaService<User> userCriteriaService;
 
-    @Before
-    public void init() {
-        if (isInitialized) return;
-        userCriteriaService.saveRandomUser(10);
-        isInitialized = true;
-    }
-
-    @After
-    public void clean() {
-        if (!isInitialized) return;
-        userCriteriaService.delete(userCriteriaService.findAll());
-        isInitialized = false;
-    }
 
     @Test
     public void shouldFindAllWithCriteria() {

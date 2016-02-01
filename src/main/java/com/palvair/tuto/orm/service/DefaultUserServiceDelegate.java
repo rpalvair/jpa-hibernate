@@ -37,9 +37,9 @@ public class DefaultUserServiceDelegate implements UserServiceDelegate {
 
             final Contact contact = new Contact();
             contact.setName("your friend");
-            user.setContact(new ArrayList<Contact>() {{
+            /*user.setContact(new ArrayList<Contact>() {{
                 add(contact);
-            }});
+            }});*/
 
             final Meeting meeting = new Meeting();
             //avoid transient exception

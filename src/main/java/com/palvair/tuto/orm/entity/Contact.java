@@ -10,7 +10,7 @@ import javax.persistence.*;
  * @author rpalvair
  */
 @Entity
-@Table(name = "contact")
+@Table(name = "Contact")
 @Data
 public class Contact {
 

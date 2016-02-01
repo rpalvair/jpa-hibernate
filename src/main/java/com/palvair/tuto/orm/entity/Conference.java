@@ -10,7 +10,7 @@ import java.util.List;
  * @author rpalvair
  */
 @Entity
-@Table
+@Table(name = "Conference")
 @Data
 public class Conference {
 

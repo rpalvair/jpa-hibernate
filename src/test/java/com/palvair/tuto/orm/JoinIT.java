@@ -1,9 +1,8 @@
 package com.palvair.tuto.orm;
 
-import com.palvair.tuto.orm.entity.Conference;
-import com.palvair.tuto.orm.entity.Meeting;
+import com.palvair.tuto.orm.entity.*;
 import com.palvair.tuto.orm.entity.Meeting_;
-import com.palvair.tuto.orm.entity.User;
+import com.palvair.tuto.orm.entity.User_;
 import lombok.extern.log4j.Log4j;
 import org.hibernate.criterion.CriteriaQuery;
 import org.junit.Before;
@@ -36,70 +35,34 @@ import static org.junit.Assert.*;
  * @author rpalvair
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 @Log4j
 public class JoinIT {
 
-    @Configuration
-    @Import(ApplicationConfig.class)
-    static class ContextConfiguration {
-
-    }
-
-    @Autowired
-    private ApplicationContext applicationContext;
-
     @PersistenceContext
     private EntityManager em;
-
-    boolean isinit = false;
 
     @Rule
     public TestName name= new TestName();
 
-    @Before
-    public void init() {
-        if (!isinit) {
-            final User user = new User();
-            user.setFirstname("arthur");
-            final Meeting meeting = new Meeting();
-            meeting.setName("meeting");
-            user.setMeeting(meeting);
-            meeting.setUsers(Arrays.asList(user));
-
-            final Conference conference = new Conference();
-            conference.setMeetings(Arrays.asList(meeting));
-
-            meeting.setConference(conference);
-
-            em.persist(conference);
-            //em.persist(meeting);
-
-            em.flush();
-            isinit = true;
-        }
-
-    }
-
     @Test
     public void outerJoinMeetingOnUser() {
+       CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
+        javax.persistence.criteria.CriteriaQuery criteriaQuery = criteriaBuilder.createQuery();
 
-        CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        javax.persistence.criteria.CriteriaQuery criteria = criteriaBuilder.createQuery();
+        Root<Meeting> root = criteriaQuery.from(Meeting.class);
 
-        Root<Meeting> meeting = criteria.from(Meeting.class);
+        /** outer join with where clause **/
+        Join<Meeting, User> join = root.join("users",JoinType.LEFT);
+        criteriaQuery.where(criteriaBuilder.equal(join.get(User_.ID), 1));
 
-        /** jointure externe **/
-        Join<Meeting, User> join = meeting.join("users", JoinType.LEFT);
-        join.on(criteriaBuilder.equal(join.get("firstname"),"billy"));
+        criteriaQuery.multiselect(root,join);
 
-        criteria.multiselect(meeting, join);
-
-        TypedQuery<Meeting> typedQuery = em.createQuery(criteria);
+        TypedQuery<Meeting> typedQuery = em.createQuery(criteriaQuery);
         final List<Meeting> meetings = typedQuery.getResultList();
         assertNotNull(meetings);
-        assertTrue(meetings.size() > 0);
+        assertTrue(meetings.size() == 1);
         log.info("method terminated = "+name.getMethodName());
     }
 
@@ -113,14 +76,14 @@ public class JoinIT {
 
         /** jointure interne **/
         Join<Meeting, User> join = meeting.join("users", JoinType.INNER);
-        join.on(criteriaBuilder.equal(join.get("firstname"),"billy"));
+        join.on(criteriaBuilder.equal(join.get("firstname"),"ruddy"));
 
         criteria.multiselect(meeting, join);
 
         TypedQuery<Meeting> typedQuery = em.createQuery(criteria);
         final List<Meeting> meetings = typedQuery.getResultList();
         assertNotNull(meetings);
-        assertTrue(meetings.size() == 0);
+        assertTrue(meetings.size() == 1);
         log.info("method terminated = "+name.getMethodName());
     }
 
@@ -128,7 +91,7 @@ public class JoinIT {
     public void innerJoinWithWhereClauseMeetingOnUser() {
 
         CriteriaBuilder criteriaBuilder = em.getCriteriaBuilder();
-        javax.persistence.criteria.CriteriaQuery criteria = criteriaBuilder.createQuery();
+        javax.persistence.criteria.CriteriaQuery<User> criteria = criteriaBuilder.createQuery(User.class);
 
         Root<User> user = criteria.from(User.class);
 
@@ -140,7 +103,7 @@ public class JoinIT {
         final List<User> users = typedQuery.getResultList();
         assertNotNull(users);
         assertTrue(users.size() > 0);
-        assertEquals(users.get(0).getFirstname(), "arthur");
+        assertEquals(users.get(0).getFirstname(), "ruddy");
         log.info("method terminated = "+name.getMethodName());
     }
 }

@@ -6,9 +6,6 @@ import com.palvair.tuto.orm.service.DefaultUserServiceDelegate;
 import com.palvair.tuto.orm.service.UserCriteriaService;
 import com.palvair.tuto.orm.service.UserService;
 import lombok.extern.log4j.Log4j;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,26 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by widdy on 09/10/14.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(loader = AnnotationConfigContextLoader.class)
+@ContextConfiguration(classes = ApplicationConfig.class)
 @Transactional
 @Log4j
-@Ignore
 public class ApplicationConfigIT {
 
-    private static boolean isInitialized = false;
-
-    @Configuration
-    @Import(ApplicationConfig.class)
-    static class ContextConfiguration {
-
-
-    }
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -55,27 +45,16 @@ public class ApplicationConfigIT {
     @Autowired
     private UserService<User> userService;
 
-    @Autowired(required = true)
+    @Autowired()
     private UserRepository<User> userRepository;
 
-    @Before
-    public void init() {
-        if (isInitialized) return;
-        userService.saveRandomUser(10);
-        isInitialized = true;
-    }
-
-    @After
-    public void clean() {
-        if (!isInitialized) return;
-        userService.delete(userService.findAll());
-        isInitialized = false;
-    }
 
     @Test
     public void shouldFindAllWithCriteria() {
         final List<User> results = userCriteriaService.findAll();
+        log.debug("size = " + results.size());
         assertNotNull(results);
+        assertTrue(results.size() == 1);
     }
 
 }
